@@ -1,5 +1,9 @@
 package com.example.recyclerviewdemo;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +17,17 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
-    private String[] titles = {"Chapter One", "Chapter Two", "Chapter Three", "Chapter Four", "Chapter Five", "Chapter Six", "Chapter Seven","Chapter Eight"};
+    public RecyclerAdapter(Context context) {
+        this.context = context;
+    }
+    private Context context;
 
-    private String[] details = {"Item One Details", "Item Two Details", "Item Three Details", "Item Four Details", "Item Five Details", "Item Six Details", "Item Seven Details", "Item Eight Details"};
+    private String[] titles = {"Chocolate One", "Chocolate Cake", "Chocolate Macaron", "Chocolate Cafe Website"};
+
+    private String[] details = {"Chocolate One", "Chocolate Cake", "Chocolate Macaron", "Chocolate Cafe Website"};
 
     private int[] images = {
-        R.drawable.android_image_1,
-            R.drawable.android_image_2,
-            R.drawable.android_image_3,
-            R.drawable.android_image_4,
-            R.drawable.android_image_5,
-            R.drawable.android_image_6,
-            R.drawable.android_image_7,
-            R.drawable.android_image_8
+        R.drawable.ic_launcher,
     };
 
     @NonNull
@@ -39,9 +41,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.itemTitle.setText(titles[i]);
         viewHolder.itemTitle.setText(details[i]);
-        viewHolder.itemImage.setImageResource(images[i]);
+        viewHolder.itemImage.setImageResource(images[0]);
 
     }
 
@@ -55,6 +56,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView itemTitle;
         TextView itemDetail;
 
+
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemImage = itemView.findViewById(R.id.item_image);
@@ -64,7 +67,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    Snackbar.make(v, "Click detect on item"+ position, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    if(position == 3) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://www.chocolatharlem.com"));
+                        v.getContext().startActivity(intent);
+                    }
+                    else {
+                        Intent intent = new Intent(context,SecondActivity.class );
+                        Bundle bundle = new Bundle();
+                        bundle.putString("title", titles[position]);
+                        bundle.putInt("image",position);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);                    }
                 }
             });
         }
